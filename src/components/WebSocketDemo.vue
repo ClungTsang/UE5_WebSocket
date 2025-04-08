@@ -1,33 +1,48 @@
 <script setup>
+// 导入Vue相关API
 import { ref, onMounted, onUnmounted } from "vue";
 
+// 消息列表，存储所有发送和接收的消息
 const messages = ref([]);
+// 当前输入框中的消息内容
 const inputMessage = ref("");
+// WebSocket连接实例
 const socket = ref(null);
+// 当前连接状态：connected/disconnected
 const status = ref("disconnected");
 
+// WebSocket服务器IP地址，默认为192.168.1.13
 const serverIp = ref("192.168.1.13");
+// WebSocket服务器端口号，默认为8088
 const serverPort = ref("8088");
 
+// 连接WebSocket服务器
 const connect = () => {
+  // 如果已连接则直接返回
   if (socket.value && socket.value.readyState === WebSocket.OPEN) {
     return;
   }
   
+  // 如果存在旧连接则先关闭
   if (socket.value) {
     socket.value.close();
   }
   
+  // 创建新的WebSocket连接
   socket.value = new WebSocket(`ws://${serverIp.value}:${serverPort.value}`);
 
+  // WebSocket连接成功回调
   socket.value.onopen = () => {
     status.value = "connected";
     console.log("WebSocket connected");
   };
 
+  // 接收到WebSocket消息回调
   socket.value.onmessage = (event) => {
     console.log('event', event);
+    // 过滤掉打字状态通知消息
     if (event.data !== 'TYPING_START' && event.data !== 'TYPING_END') {
+      // 构造接收消息对象并添加到消息列表
       const message = {
         content: event.data,
         type: 'received',
@@ -37,6 +52,7 @@ const connect = () => {
     }
   };
 
+  // WebSocket连接关闭回调
   socket.value.onclose = () => {
     status.value = "disconnected";
     console.log("WebSocket disconnected");
@@ -45,46 +61,62 @@ const connect = () => {
 
 
 
+// 发送普通文本消息
 const sendMessage = () => {
+  // 检查WebSocket连接是否已建立
   if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+    // 构造发送消息对象
     const message = {
       content: inputMessage.value,
       type: 'sent',
       time: new Date().toLocaleTimeString()
     };
+    // 发送消息
     socket.value.send(inputMessage.value);
+    // 将消息添加到消息列表
     messages.value.push(message);
+    // 清空输入框
     inputMessage.value = "";
 
   }
 };
 
+// 发送颜色消息
 const sendColorMessage = (color) => {
+  // 检查WebSocket连接是否已建立
   if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+    // 构造颜色消息对象
     const message = {
       content: color,
       type: 'sent',
       time: new Date().toLocaleTimeString()
     };
+    // 发送颜色消息
     socket.value.send(color);
+    // 将消息添加到消息列表
     messages.value.push(message);
   }
 };
 
+// 断开WebSocket连接
 const disconnect = () => {
   if (socket.value) {
+    // 关闭WebSocket连接
     socket.value.close();
   }
 };
 
+// 清空消息列表
 const clearMessages = () => {
   messages.value = [];
 };
 
+// 组件挂载时自动连接WebSocket
 onMounted(() => {
   connect();
 });
 
+// 组件卸载时断开WebSocket连接
 onUnmounted(() => {
   disconnect();
 });

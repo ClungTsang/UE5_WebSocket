@@ -19,9 +19,6 @@ pnpm install
 ```bash
 pnpm dev
 ```
-5. 同时启动WebSocket服务器(需要Node.js环境):
-```bash
-node websocket-server.js
 ```
 
 ## 部署指南
@@ -57,9 +54,6 @@ docker run -d -p 8080:80 --name vue-ws-container vue-ws-app
 ```
 4. 访问应用:
    - 打开浏览器访问 http://localhost:8080
-5. 同时运行WebSocket服务器(可选):
-```bash
-node websocket-server.js
 ```
 
 ## 环境变量配置
@@ -76,8 +70,20 @@ A: 检查WebSocket服务器是否运行，端口是否被占用
 ## 项目结构
 ```
 ├── src/
-│   ├── components/WebSocketDemo.vue  # WebSocket组件
-│   ├── main.js                       # 应用入口
-├── websocket-server.js               # WebSocket服务器
+│   ├── assets/                       # 静态资源
+│   │   └── vue.svg
+│   ├── components/                   # 组件
+│   │   ├── ColorButtons.vue          # 颜色按钮组件
+│   │   ├── MessageInput.vue          # 消息输入组件
+│   │   ├── MessageList.vue           # 消息列表组件
+│   │   └── StatusIndicator.vue       # 状态指示器组件
+│   ├── hooks/                        # 自定义Hook
+│   │   └── useChat.js                # 聊天相关Hook
+│   ├── pages/                        # 页面
+│   │   └── Chat.vue                  # 聊天页面
+│   ├── App.vue                       # 根组件
+│   └── main.js                       # 应用入口
 ├── vite.config.js                    # Vite配置
+├── nginx.conf                        # Nginx配置
+└── Dockerfile                        # Docker配置
 ```

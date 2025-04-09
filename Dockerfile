@@ -16,7 +16,7 @@ RUN pnpm install --registry=https://registry.npmmirror.com/
 COPY . .
 
 # 构建生产版本
-RUN npm run build
+RUN pnpm run build
 
 # 使用Nginx作为生产环境
 FROM nginx:stable-alpine

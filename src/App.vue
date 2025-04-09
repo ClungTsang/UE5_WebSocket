@@ -1,7 +1,7 @@
 <script setup>
-import WebSocketDemo from './components/WebSocketDemo.vue'
+import Chat from './pages/Chat.vue'
 </script>
 
 <template>
-  <WebSocketDemo />
+  <Chat />
 </template>

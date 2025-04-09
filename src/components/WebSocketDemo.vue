@@ -11,10 +11,8 @@ const socket = ref(null);
 // 当前连接状态：connected/disconnected
 const status = ref("disconnected");
 
-// WebSocket服务器IP地址，默认为192.168.1.13
-const serverIp = ref("192.168.1.13");
-// WebSocket服务器端口号，默认为8088
-const serverPort = ref("8088");
+// WebSocket服务器IP地址，默认为192.168.1.13:8080
+const server = ref("toolin.cn/echo");
 
 // 连接WebSocket服务器
 const connect = () => {
@@ -28,8 +26,14 @@ const connect = () => {
     socket.value.close();
   }
   
+  // 清空消息和输入
+  clearMessages();
+  inputMessage.value = "";
+  
+  // 根据当前环境自动选择协议
+  const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
   // 创建新的WebSocket连接
-  socket.value = new WebSocket(`ws://${serverIp.value}:${serverPort.value}`);
+  socket.value = new WebSocket(`${protocol}${server.value}`);
 
   // WebSocket连接成功回调
   socket.value.onopen = () => {
@@ -104,6 +108,10 @@ const disconnect = () => {
     // 关闭WebSocket连接
     socket.value.close();
   }
+  
+  // 清空消息和输入
+  clearMessages();
+  inputMessage.value = "";
 };
 
 // 清空消息列表
@@ -133,12 +141,8 @@ onUnmounted(() => {
 
     <div class="input-group">
       <input
-        v-model="serverIp"
-        placeholder="Server IP"
-      />
-      <input
-        v-model="serverPort"
-        placeholder="Port"
+        v-model="server"
+        placeholder="124.222.6.60:8800 或者 toolin.cn/echo"
       />
       <button
         class="connect-btn"
@@ -210,7 +214,7 @@ onUnmounted(() => {
         <div class="message-content">
           <span v-if="msg.type === 'sending'">发送中...</span>
           <span v-else-if="msg.type === 'sent'">{{ msg.content }}</span>
-          <span v-else-if="msg.type === 'received'">{{ msg.content }}</span>
+          <div v-else-if="msg.type === 'received'" v-html="msg.content"></div>
         </div>
       </div>
     </div>

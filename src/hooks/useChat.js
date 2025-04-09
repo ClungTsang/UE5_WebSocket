@@ -21,18 +21,12 @@ export default function useChat() {
     
     if (newVal) {
       const welcomeMessage = {
-        content: "你好！我是AI助手，请问有什么可以帮您的吗？",
+        content: "麻古麻古，duang！",
         type: "received",
         time: new Date().toLocaleTimeString()
       };
       messages.value.push(welcomeMessage);
     }else{
-      // const welcomeMessage = {
-      //   content: "你好！我是普通聊天助手，请问有什么可以帮您的吗？",
-      //   type: "received",
-      //   time: new Date().toLocaleTimeString()
-      // };
-      // messages.value.push(welcomeMessage);
       connect()
     }
   });

@@ -13,23 +13,27 @@ export default function useChat() {
   // AI聊天模式状态
   const aiMode = ref(true);
   // 监听aiMode变化
-  watch(aiMode, (newVal) => {
-    if (socket.value && socket.value.readyState === WebSocket.OPEN) {
-      disconnect();
-    }
-    messages.value = [];
-    
-    if (newVal) {
-      const welcomeMessage = {
-        content: "麻古麻古，duang！",
-        type: "received",
-        time: new Date().toLocaleTimeString()
-      };
-      messages.value.push(welcomeMessage);
-    }else{
-      connect()
-    }
-  });
+  watch(
+    aiMode,
+    (newVal) => {
+      if (socket.value && socket.value.readyState === WebSocket.OPEN) {
+        disconnect();
+      }
+      messages.value = [];
+
+      if (newVal) {
+        const welcomeMessage = {
+          content: "麻古麻古，duang！",
+          type: "received",
+          time: new Date().toLocaleTimeString(),
+        };
+        messages.value.push(welcomeMessage);
+      } else {
+        connect();
+      }
+    },
+    { immediate: true }
+  );
   // 当前选择的AI服务
   const currentAI = ref("deepseek");
   // 当前选择的DeepSeek模型版本

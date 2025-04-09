@@ -7,8 +7,10 @@ WORKDIR /app
 # 复制package.json和package-lock.json
 COPY package*.json ./
 
+# 安装pnpm并设置镜像
+RUN npm install -g pnpm --registry=https://registry.npmmirror.com/
 # 安装依赖
-RUN npm install
+RUN pnpm install --registry=https://registry.npmmirror.com/
 
 # 复制项目文件
 COPY . .

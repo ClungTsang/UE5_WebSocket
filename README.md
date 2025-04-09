@@ -24,7 +24,9 @@ pnpm dev
 node websocket-server.js
 ```
 
-## Vercel部署指南
+## 部署指南
+
+### Vercel部署
 1. 注册Vercel账号(https://vercel.com)
 2. 安装Vercel CLI:
 ```bash
@@ -42,6 +44,23 @@ vercel
    - 选择项目目录
    - 选择默认配置
    - 部署完成后会获得生产环境URL
+
+### Docker部署
+1. 确保已安装Docker
+2. 构建Docker镜像:
+```bash
+docker build -t vue-ws-app .
+```
+3. 运行容器:
+```bash
+docker run -d -p 8080:80 --name vue-ws-container vue-ws-app
+```
+4. 访问应用:
+   - 打开浏览器访问 http://localhost:8080
+5. 同时运行WebSocket服务器(可选):
+```bash
+node websocket-server.js
+```
 
 ## 环境变量配置
 在Vercel中需要配置以下环境变量:
